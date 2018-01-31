@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: my-amqp-app
+
+rabbitmq:
+  auto-config:
+    enabled: true
+    info-headers:
+      source-application: ${spring.application.name}
+    default-exchange:
+      type: topic
+      durable: false
+      auto-delete: true
+    default-queue:
+      durable: false
+      auto-delete: true
+      dead-letter-enabled: true
+    dead-letter-config:
+      dead-letter-exchange:
+        name: my-amqp-app-dead-letter-exchange-${user.name}
+        auto-delete: true
+        durable: false
+      queue-postfix: .dlq
+    re-queue-config:
+      auto-requeue-enabled: false
+      exchange:
+        name: my-amqp-app-requeue-exchange-${user.name}
+      queue:
+        name: my-amqp-app-requeue-queue-${user.name}
+      routing-key: re-queue-key
+      cron: 0 0 */3 * * *
+      message-count: 1
+    exchanges:
+      exchange-one:
+        name: my-amqp-app-exchange-one-${user.name}
+      exchange-two:
+        name: my-amqp-app-exchange-two-${user.name}
+      exchange-mock:
+        name: my-amqp-app-exchange-mock-${user.name}
+    queues:
+      queue-one:
+        name: my-amqp-app-queue-one-${user.name}
+      queue-two:
+        name: my-amqp-app-queue-two-${user.name}
+      queue-mock:
+        name: my-amqp-app-queue-mock-${user.name}
+        dead-letter-enabled: false
+    bindings:
+      binding-one:
+        exchange: exchange-one
+        queue: queue-one
+        routing-key: rkey-one
+      binding-two:
+        exchange: exchange-two
+        queue: queue-two
+        routing-key: rkey-two
+      binding-mock:
+        exchange: exchange-mock
+        queue: queue-mock
+        routing-key: rkey-mock

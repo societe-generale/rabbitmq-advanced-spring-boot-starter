@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: amqp-test-app
+
+rabbitmq:
+  auto-config:
+    enabled: true
+    info-headers:
+      source-application: ${spring.application.name}
+    default-exchange:
+      type: topic
+      durable: false
+      auto-delete: true
+    default-queue:
+      durable: false
+      auto-delete: true
+      dead-letter-enabled: true
+    dead-letter-config:
+      dead-letter-exchange:
+        name: amqp-test-app-dead-letter-exchange-${user.name}
+        auto-delete: true
+        durable: false
+      queue-postfix: .dlq
+    exchanges:
+      exchange-one:
+        name: amqp-test-app-exchange-one-${user.name}
+      exchange-two:
+        name: amqp-test-app-exchange-two-${user.name}
+      exchange-mock:
+        name: amqp-test-app-exchange-mock-${user.name}
+    queues:
+      queue-one:
+        name: amqp-test-app-queue-one-${user.name}
+      queue-two:
+        name: amqp-test-app-queue-two-${user.name}
+      queue-mock:
+        name: amqp-test-app-queue-mock-${user.name}
+        dead-letter-enabled: false
+    bindings:
+      binding-one:
+        exchange: exchange-one
+        queue: queue-one
+        routing-key: rkey-one
+      binding-two:
+        exchange: exchange-two
+        queue: queue-two
+        routing-key: rkey-two
+      exchange-mock:
+        exchange: exchange-mock
+        queue: queue-mock
+        routing-key: rkey-mock
