@@ -1,9 +1,7 @@
-# rabbitmq-advanced
+# rabbitmq-advanced  [![Build Status](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter.svg?branch=master)](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter)
+
 
 A generic library for messaging with rabbit mq with extension on spring boot amqp
-
-
-[![Build Status](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter.svg?branch=master)](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter)
 
 - [Aim](#aim)
 - [Configurations](#configurations)
