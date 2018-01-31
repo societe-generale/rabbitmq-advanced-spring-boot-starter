@@ -1,4 +1,4 @@
-# rabbitmq-advanced  [![Build Status](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter.svg?branch=master)](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter)
+# rabbitmq-advanced  [![Build Status](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter.svg?branch=master)](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter)  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/943e070973d84f669b1e593747d0e1a1)](https://www.codacy.com/app/anandmnair/rabbitmq-advanced-spring-boot-starter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=societe-generale/rabbitmq-advanced-spring-boot-starter&amp;utm_campaign=Badge_Grade)
 
 
 A generic library for messaging with rabbit mq with extension on spring boot amqp
