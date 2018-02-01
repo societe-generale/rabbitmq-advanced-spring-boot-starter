@@ -554,12 +554,19 @@ The correlation id will be added to the message automatically as part of tracer.
 ![Tracer Correlation Id log](./doc/image/tracer-log.png)
 
 ### Contributions
-For any queries please contact the following contributes 
-- Vincent FUCHS 
+
+Main author of the project is [Anand Manissery](https://github.com/anandmnair). For any question or suggestion please initiate a discussion through the [project issues](https://github.com/societe-generale/rabbitmq-advanced-spring-boot-starter/issues).
+
+Pull requests are welcome. We follow a strict test driven approach, so make sure your contribution is well tested.  
+
+### Thanks and acknowledgement
+ 
+- [Vincent FUCHS](https://github.com/vincent-fuchs) 
 - Patrice FRICARD
 - Igor LOVICH
 - Rahul DAS
-- Anand MANISSERY
+
+Thanks a lot for your inputs and feedback that have made the v1.0.0 possible !
 
 ### License
 License is under the Apache V2 License.  
