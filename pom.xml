@@ -17,7 +17,6 @@
         <java.version>1.8</java.version>
         <commons.lang.version>2.6</commons.lang.version>
         <lombok.version>1.16.16</lombok.version>
-        <pojo.tester.version>0.7.5</pojo.tester.version>
         <jacoco.version>0.7.5.201505241946</jacoco.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <version.maven.plugin.license>1.8</version.maven.plugin.license>
@@ -96,12 +95,6 @@
                 <artifactId>commons-lang</artifactId>
                 <version>${commons.lang.version}</version>
             </dependency>
-            <dependency>
-                <groupId>pl.pojo</groupId>
-                <artifactId>pojo-tester</artifactId>
-                <version>${pojo.tester.version}</version>
-                <scope>test</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -123,33 +116,34 @@
 
     <build>
         <directory>${project.basedir}/target</directory>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.version}</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>report</id>
-                            <phase>test</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.eluder.coveralls</groupId>
-                    <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.1.0</version>
-                </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
@@ -215,11 +209,6 @@
                     <groupId>org.codehaus.sonar</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
                     <version>4.5.5</version>
-                </plugin>
-                <plugin>
-                     <groupId>org.eluder.coveralls</groupId>
-                     <artifactId>coveralls-maven-plugin</artifactId>
-                     <version>4.1.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
