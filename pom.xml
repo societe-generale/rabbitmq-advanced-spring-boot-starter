@@ -9,7 +9,8 @@
     <packaging>pom</packaging>
 
     <name>rabbitmq-advanced-parent</name>
-    <description>rabbitmq-advanced-parent project for rabbit mq integration with spring amqp</description>
+    <description>A generic library for messaging with rabbit mq with extension on spring boot amqp</description>
+    <url>https://github.com/societe-generale/rabbitmq-advanced-spring-boot-starter</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
