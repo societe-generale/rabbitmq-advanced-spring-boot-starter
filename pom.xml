@@ -17,7 +17,7 @@
         <java.version>1.8</java.version>
         <commons.lang.version>2.6</commons.lang.version>
         <lombok.version>1.16.16</lombok.version>
-        <jacoco.version>0.7.5.201505241946</jacoco.version>
+        <jacoco.version>0.8.0</jacoco.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <version.maven.plugin.license>1.8</version.maven.plugin.license>
         <license.licenseName>apache_v2</license.licenseName>
