@@ -141,7 +141,19 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.3.0</version>
             </plugin>
+            
+             <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+             </plugin>
+            
+            <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>           
+            
         </plugins>
+        
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -157,6 +169,23 @@
                         </execution>
                     </executions>
                 </plugin>
+                
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <configuration>
+
+                        <tagletArtifacts>
+                            <tagletArtifact>
+                                <groupId>org.apache.maven.plugin-tools</groupId>
+                                <artifactId>maven-plugin-tools-javadoc</artifactId>
+                                <version>3.5.1</version>
+                            </tagletArtifact>
+                        </tagletArtifacts>
+
+                    </configuration>
+			    </plugin>
 
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
@@ -213,6 +242,8 @@
             </plugins>
         </pluginManagement>
     </build>
+    
+    
     <profiles>
         <profile>
             <id>sign-artifacts</id>
