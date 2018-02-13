@@ -174,18 +174,15 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.0.0</version>
-                    <configuration>
-
-                        <tagletArtifacts>
-                            <tagletArtifact>
-                                <groupId>org.apache.maven.plugin-tools</groupId>
-                                <artifactId>maven-plugin-tools-javadoc</artifactId>
-                                <version>3.5.1</version>
-                            </tagletArtifact>
-                        </tagletArtifacts>
-
-                    </configuration>
-			    </plugin>
+                     <executions>
+			     <execution>
+			      <id>attach-javadocs</id>
+			      <goals>
+			       <goal>jar</goal>
+			      </goals>
+			     </execution>
+		    </executions>
+		</plugin>
 
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
