@@ -39,7 +39,7 @@ Please add below pom dependency for rabbitmq-advanced-spring-boot-starter
     <dependency>
         <groupId>com.societegenerale</groupId>
         <artifactId>rabbitmq-advanced-spring-boot-starter</artifactId>
-        <version>1.0.0.RELEASE</version> 
+        <version>1.0.1.RELEASE</version>
         <!-- check the latest version -->
     </dependency>
 ```
