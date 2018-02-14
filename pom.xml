@@ -4,7 +4,7 @@
 
     <groupId>com.societegenerale</groupId>
     <artifactId>rabbitmq-advanced-parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1.RELEASE</version>
     <packaging>pom</packaging>
 
     <name>rabbitmq-advanced-parent</name>
