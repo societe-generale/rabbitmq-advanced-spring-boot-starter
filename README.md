@@ -1,7 +1,7 @@
 # rabbitmq-advanced  [![Build Status](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter.svg?branch=master)](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter)  [![Coverage Status](https://coveralls.io/repos/github/societe-generale/rabbitmq-advanced-spring-boot-starter/badge.svg?branch=master)](https://coveralls.io/github/societe-generale/rabbitmq-advanced-spring-boot-starter?branch=master)  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/943e070973d84f669b1e593747d0e1a1)](https://www.codacy.com/app/anandmnair/rabbitmq-advanced-spring-boot-starter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=societe-generale/rabbitmq-advanced-spring-boot-starter&amp;utm_campaign=Badge_Grade)
 
 
-A generic library for messaging with rabbit mq with extension on spring boot amqp
+A generic library for messaging with rabbit mq, an extension of spring boot amqp
 
 - [Aim](#aim)
 - [Configurations](#configurations)
@@ -23,7 +23,7 @@ A generic library for messaging with rabbit mq with extension on spring boot amq
 
 ## Aim
 The aim of this project is to provide a generic spring boot starter project for messaging solution with rabbit mq.
-This help us to auto configure rabbit mq exchange and queue along with the binding by simply providing the configurations in yml.
+This helps us to auto configure rabbit mq exchanges and queues along with the binding by simply providing the configurations in yml.
 This also helps in better exception handling and monitoring at a single place at a framework level.
 Hence no more duplicate code added for creating exchange and queue with the binding in various projects
 
