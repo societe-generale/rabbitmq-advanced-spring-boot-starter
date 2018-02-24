@@ -1,7 +1,11 @@
 # rabbitmq-advanced  [![Build Status](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter.svg?branch=master)](https://travis-ci.org/societe-generale/rabbitmq-advanced-spring-boot-starter)  [![Coverage Status](https://coveralls.io/repos/github/societe-generale/rabbitmq-advanced-spring-boot-starter/badge.svg?branch=master)](https://coveralls.io/github/societe-generale/rabbitmq-advanced-spring-boot-starter?branch=master)  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/943e070973d84f669b1e593747d0e1a1)](https://www.codacy.com/app/anandmnair/rabbitmq-advanced-spring-boot-starter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=societe-generale/rabbitmq-advanced-spring-boot-starter&amp;utm_campaign=Badge_Grade)
 
 
-A generic library for messaging with rabbit mq, an extension of spring boot amqp
+A generic library for messaging with RabbitMq, an extension of spring boot amqp.
+
+Note : If you are already using Spring Cloud Stream, you probably don't need this starter. However, if you need AMQP specific features that are not available through Spring Cloud because of its abstraction level, then you may be interested in it, as it provides features that are available in Spring Cloud. Give it a try, and let us know what you think !
+If you see anything that can be improved or simplified, don't hesitate to propose a change !
+
 
 - [Aim](#aim)
 - [Configurations](#configurations)
@@ -28,10 +32,10 @@ This also helps in better exception handling and monitoring at a single place at
 Hence no more duplicate code added for creating exchange and queue with the binding in various projects
 
 ## Configurations
-```
+
 You can configure rabbit mq server configurations in application.yml under 'spring.rabbitmq' section.
-You can configure the exchange , queue, binding in application.yml under 'rabbitmq.auto-config'.
-```
+
+You can configure the exchange, queue, binding in application.yml under 'rabbitmq.auto-config'.
 
 ### Pom Configuration
 Please add below pom dependency for rabbitmq-advanced-spring-boot-starter
@@ -45,7 +49,8 @@ Please add below pom dependency for rabbitmq-advanced-spring-boot-starter
 ```
 
 ### Spring RabbitMQ Configuration
-`Below is the sample spring rabbitmq configuration.`
+
+Below is the sample spring rabbitmq configuration.`
 
 ```yaml
 spring:
@@ -64,9 +69,9 @@ spring:
 ```
 
 ### RabbitMQ Auto Configuration
-```
+
 Below is the sample rabbitmq auto configuration.
-```
+
 ```yaml
 rabbitmq:
   auto-config:
@@ -139,16 +144,13 @@ rabbitmq:
         exchange: exchange-mock
         queue: queue-mock
         routing-key: rkey-mock
-        
-        
 ```
 
 
 ### Info Headers Configuration
 
-```
-You can configure the info headers here. All these header info will be added to the each messages sent by the system. 
-```
+You can configure the info headers here. All these header infos will be added to the each message sent by the system.
+
 ```yaml
 rabbitmq:
   auto-config:
@@ -164,10 +166,9 @@ rabbitmq:
 
 ### Default Exchange Configuration
 
-```
 You can configure the default exchange under this section. All the common properties can be con configured here.
 At each exchange level you can override the default configuration. All the missing properties will be mapped with default configurations 
-``` 
+
 ```yaml
 rabbitmq:
   auto-config:   
@@ -202,10 +203,8 @@ rabbitmq:
 
 ### Default Queue Configuration
 
-```
 You can configure the default queue under this section. All the common properties can be con configured here.
-At each queue level you can override the default configuration. All the missing properties will be mapped with default configurations 
-``` 
+At each queue level you can override the default configuration. All the missing properties will be mapped with default configurations
 
 ```yaml
 rabbitmq:
@@ -232,12 +231,12 @@ rabbitmq:
 
 ### Dead Letter Configuration
 
-```
+
 You can configure the dead letter exchange and queue postfix. Then all you have to do is for queue , enable the dead letter queue.
 The dead letter queue will be created with the same name as original queue with dead letter queue postfix.
-Queue : my-process-queueu
-Dead Letter Queue : my-process-queueu.dlq 
-```
+Queue : my-process-queue
+Dead Letter Queue : my-process-queue.dlq
+
 ```yaml
 rabbitmq:
   auto-config:   
@@ -289,10 +288,8 @@ rabbitmq:
 
 ### ReQueue Configuration
 
-```
 You can configure the requeue exchange and queue here.
-To requeue some message from any dead letter queue, you just have to push a requeue message to requeue exchange with requeue routing key. 
-```
+To requeue some message from any dead letter queue, you just have to push a requeue message to requeue exchange with requeue routing key.
 
 ```yaml
 rabbitmq:
@@ -317,9 +314,7 @@ rabbitmq:
 
   4. **routing-key**  : `This indicate the 'routing-key' configuration for requeue`
 
-```
-Below is the format for requeue message which requeue 3 message from 'some-queue.dlq' to 'some-queue' 
-```
+Below is the format for requeue message which requeue 3 message from 'some-queue.dlq' to 'some-queue'
 
 ```json
 {
@@ -330,9 +325,7 @@ Below is the format for requeue message which requeue 3 message from 'some-queue
 
 ### Exchange Configuration
 
-```
 You can configure all the exchanges under this section. (Map)
-```
 
 ```yaml
 rabbitmq:
@@ -374,9 +367,8 @@ rabbitmq:
 
 
 ### Queue Configuration
-```
+
 You can configure all the queues under this section. (Map)
-```
 
 ```yaml
 rabbitmq:
@@ -407,9 +399,8 @@ rabbitmq:
 
 
 ### Binding Configuration
-```
+
 You can configure all the bindings under this section. (Map)
-```
 
 ```yaml
 rabbitmq:
@@ -448,7 +439,6 @@ rabbitmq:
 You can enable dead letter queue for each queue by providing below configuration in respective queue configuration or at the default queue configuration
 
 ```yaml
-
 rabbitmq: 
   auto-config:
    
@@ -472,7 +462,7 @@ rabbitmq:
 
   . . .  
 ```
-With the above configuration , the failed message will be send to the dead letter queue which is bind to the dead letter exchange as per the configuration. 
+With the above configuration , the failed message will be sent to the dead letter queue which is bind to the dead letter exchange as per the configuration. 
 Example : If the queue name is **'some.dummy.queue'** and dead-letter-queue-postfix is **'.dlq'** then dead letter queue will be **'some.dummy.queue.dlq'**
 
 ![DeadLetterMessage](./doc/image/dead-letter-message.png)
@@ -481,8 +471,8 @@ The above is the sample message in the dead letter queue.
 
 #### Message Exception Handler
 
-In addition to the above dead letter queue, we can also configure MessageExceptionHandler's to have additional exception handling like saving the failed message exception to database, or doing additional logging etc.  
-If you want to handle MessageException , you can implement the MessageExceptionHandler and configure the bean in spring.
+In addition to the above dead letter queue, we can also configure MessageExceptionHandler to have additional exception handling like saving the failed message exception to database, or doing additional logging etc.  
+If you want to handle MessageException, you can implement the MessageExceptionHandler and configure the bean in Spring.
 Each message and the exception will be passed to all MessageExceptionHandler (if its configured)
 
 You need to enable the retry to use the message exception handler
