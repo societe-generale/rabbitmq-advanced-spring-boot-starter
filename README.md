@@ -3,7 +3,7 @@
 
 A generic library for messaging with RabbitMq, an extension of spring boot amqp.
 
-Note : If you are already using Spring Cloud Stream, you probably don't need this starter. However, if you need AMQP specific features that are not available through Spring Cloud because of its abstraction level, then you ay be interested in it, as it provides features that are available in Spring Cloud. Give it a try, and let us know what you think !
+Note : If you are already using Spring Cloud Stream, you probably don't need this starter. However, if you need AMQP specific features that are not available through Spring Cloud because of its abstraction level, then you may be interested in it, as it provides features that are available in Spring Cloud. Give it a try, and let us know what you think !
 If you see anything that can be improved or simplified, don't hesitate to propose a change !
 
 
