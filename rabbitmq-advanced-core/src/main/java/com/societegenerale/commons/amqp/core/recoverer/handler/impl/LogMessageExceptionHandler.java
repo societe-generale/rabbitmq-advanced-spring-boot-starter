@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +30,20 @@ import java.util.Map;
  */
 @Slf4j
 public class LogMessageExceptionHandler implements MessageExceptionHandler {
+
+  private static List directlyReadableContentTypes;
+
+  static{
+
+    List tmpDirectlyReadableContentTypes = Arrays.asList("text/plain",
+                                                         "application/json",
+                                                         "text/x-json",
+                                                         "application/xml");
+
+    directlyReadableContentTypes=Collections.unmodifiableList(tmpDirectlyReadableContentTypes);
+
+  }
+
   @Override
   public void handle(Message message, Throwable cause) {
     Map<String, Object> headers = message.getMessageProperties().getHeaders();
@@ -37,8 +53,8 @@ public class LogMessageExceptionHandler implements MessageExceptionHandler {
 
   protected String getMessageString(Message message) {
     String contentType = message.getMessageProperties() != null ? message.getMessageProperties().getContentType() : null;
-    if ("text/plain".equals(contentType) || "application/json".equals(contentType) ||
-        "text/x-json".equals(contentType) || "application/xml".equals(contentType)) {
+
+    if (directlyReadableContentTypes.contains(contentType)) {
       return new String(message.getBody());
     } else {
       return Arrays.toString(message.getBody()) + "(byte[" + message.getBody().length + "])";
