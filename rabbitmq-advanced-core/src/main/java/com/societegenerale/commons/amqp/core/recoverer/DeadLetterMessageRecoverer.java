@@ -24,12 +24,8 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.retry.MessageRecoverer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Anand Manissery on 7/13/2017.
@@ -44,7 +40,7 @@ public class DeadLetterMessageRecoverer implements MessageRecoverer {
   private RabbitConfig rabbitmqProperties;
 
   @Autowired(required = false)
-  private List<MessageExceptionHandler> messageExceptionHandlers;
+  private List<MessageExceptionHandler> messageExceptionHandlers=new ArrayList<>();
 
   @Override
   public void recover(final Message message, final Throwable cause) {
@@ -64,26 +60,26 @@ public class DeadLetterMessageRecoverer implements MessageRecoverer {
       message.getMessageProperties().setCorrelationIdString((String) headers.get("correlation-id"));
     }
     Map<? extends String, ? extends Object> additionalHeaders = loadAdditionalHeaders(message, cause);
+
     if (additionalHeaders != null) {
       headers.putAll(additionalHeaders);
     }
 
-    if (!CollectionUtils.isEmpty(messageExceptionHandlers)) {
-      for (MessageExceptionHandler messageExceptionHandler : messageExceptionHandlers) {
-        try {
-          messageExceptionHandler.handle(message, cause);
-        } catch (Exception e) {
-          // To catch any exception in the  MessageExceptionHandler to avoid the interruption in other MessageExceptionHandlers
-          log.error("Exception occurred while processing '{}' message exception handler.", messageExceptionHandler, e);
-        }
+
+    for (MessageExceptionHandler messageExceptionHandler : messageExceptionHandlers) {
+      try {
+        messageExceptionHandler.handle(message, cause);
+      } catch (Exception e) {
+        // To catch any exception in the  MessageExceptionHandler to avoid the interruption in other MessageExceptionHandlers
+        log.error("Exception occurred while processing '{}' message exception handler.", messageExceptionHandler, e);
       }
     }
 
     this.errorTemplate.send(deadLetterExchangeName, deadLetterRoutingKey, message);
-    if (log.isWarnEnabled()) {
-      log.warn("Republishing failed message to exchange '{}', routing key '{}', message {{}} , cause {}",
-          deadLetterExchangeName, deadLetterRoutingKey, message, cause);
-    }
+
+    log.warn("Republishing failed message to exchange '{}', routing key '{}', message {{}} , cause {}",
+            deadLetterExchangeName, deadLetterRoutingKey, message, cause);
+
 
   }
 
