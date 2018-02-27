@@ -25,6 +25,7 @@ import com.societegenerale.commons.amqp.core.requeue.ReQueueConsumer;
 import com.societegenerale.commons.amqp.core.requeue.policy.impl.ThresholdReQueuePolicy;
 import org.mockito.Mockito;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.retry.MessageRecoverer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -45,7 +46,7 @@ public class SpringBootAmqpTestApplication {
   }
 
   @Bean
-  public DeadLetterMessageRecoverer deadLetterMessageRecoverer() {
+  public MessageRecoverer deadLetterMessageRecoverer() {
     return new DeadLetterMessageRecoverer();
   }
 
