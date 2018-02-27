@@ -59,12 +59,8 @@ public class DeadLetterMessageRecoverer implements MessageRecoverer {
     if(headers.containsKey("correlation-id")) {
       message.getMessageProperties().setCorrelationIdString((String) headers.get("correlation-id"));
     }
-    Map<? extends String, ? extends Object> additionalHeaders = loadAdditionalHeaders(message, cause);
 
-    if (additionalHeaders != null) {
-      headers.putAll(additionalHeaders);
-    }
-
+    headers.putAll(loadAdditionalHeaders(message, cause));
 
     for (MessageExceptionHandler messageExceptionHandler : messageExceptionHandlers) {
       try {
@@ -83,6 +79,12 @@ public class DeadLetterMessageRecoverer implements MessageRecoverer {
 
   }
 
+  /**
+   * This is a dummy implementation that doesn't do anything.. If you extend this class, you can simply override this method to provide your own additional headers
+   * @param message
+   * @param cause
+   * @return
+   */
   protected Map<String, Object> loadAdditionalHeaders(Message message, Throwable cause) {
     log.info("No additional headers added for message {}, cause {}", message, cause == null ? null : cause.getMessage());
     return new HashMap<>();
