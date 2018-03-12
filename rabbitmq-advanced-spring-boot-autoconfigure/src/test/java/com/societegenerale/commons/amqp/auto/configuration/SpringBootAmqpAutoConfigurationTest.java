@@ -16,57 +16,30 @@
 
 package com.societegenerale.commons.amqp.auto.configuration;
 
-import com.societegenerale.commons.amqp.core.config.BindingConfig;
-import com.societegenerale.commons.amqp.core.config.ExchangeConfig;
-import com.societegenerale.commons.amqp.core.config.QueueConfig;
-import com.societegenerale.commons.amqp.core.config.RabbitConfig;
-import org.apache.commons.lang.BooleanUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mockito;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Map;
-
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class SpringBootAmqpAutoConfigurationTest {
 
-  @Autowired
-  private ConfigurableApplicationContext applicationContext;
-
-  @Autowired
-  private RabbitConfig rabbitConfig;
+  @MockBean
+  private RabbitAdmin rabbitAdmin;
 
   @Test
-  public void checkRabbitMqAutoConfigurationBeansPresentOrNot() {
-
-    for(Map.Entry<String,ExchangeConfig> exchangeEntry : rabbitConfig.getExchanges().entrySet()) {
-      assertTrue(applicationContext.containsBean(exchangeEntry.getKey()));
-    }
-
-    for(Map.Entry<String,QueueConfig> queueEntry : rabbitConfig.getQueues().entrySet()) {
-      assertTrue(applicationContext.containsBean(queueEntry.getKey()));
-      QueueConfig queueConfig = queueEntry.getValue();
-      if(BooleanUtils.isTrue(queueConfig.getDeadLetterEnabled())) {
-        assertTrue(applicationContext.containsBean(rabbitConfig.getDeadLetterConfig().getDeadLetterExchange().getName()));
-        assertTrue(applicationContext.containsBean(new StringBuilder()
-            .append(rabbitConfig.getQueues().get(queueEntry.getKey()).getName()).append(rabbitConfig.getDeadLetterConfig().getQueuePostfix()).toString()));
-        assertTrue(applicationContext.containsBean(new StringBuilder()
-            .append(rabbitConfig.getDeadLetterConfig().getDeadLetterExchange().getName())
-            .append(":")
-            .append(rabbitConfig.getQueues().get(queueEntry.getKey()).getName()).append(rabbitConfig.getDeadLetterConfig().getQueuePostfix()).toString()));
-        assertTrue(applicationContext.containsBean(rabbitConfig.getReQueueConfig().getExchange().getName()));
-        assertTrue(applicationContext.containsBean(rabbitConfig.getReQueueConfig().getQueue().getName()));
-      }
-    }
-
-    for(Map.Entry<String,BindingConfig> bindingEntry : rabbitConfig.getBindings().entrySet()) {
-      assertTrue(applicationContext.containsBean(bindingEntry.getKey()));
-    }
+  public void checkRabbitMqAutoConfigurationDeclaration() {
+    Mockito.verify(rabbitAdmin, Mockito.times(5)).declareExchange(Mockito.any(Exchange.class));
+    Mockito.verify(rabbitAdmin, Mockito.times(6)).declareQueue(Mockito.any(Queue.class));
+    Mockito.verify(rabbitAdmin, Mockito.times(6)).declareBinding(Mockito.any(Binding.class));
   }
 }

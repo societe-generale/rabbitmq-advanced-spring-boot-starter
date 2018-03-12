@@ -27,7 +27,9 @@ import com.societegenerale.commons.amqp.core.requeue.ReQueueConsumer;
 import com.societegenerale.commons.amqp.core.requeue.policy.ReQueuePolicy;
 import com.societegenerale.commons.amqp.core.requeue.policy.impl.ThresholdReQueuePolicy;
 import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.CorrelationDataPostProcessor;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.retry.MessageRecoverer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -85,7 +87,7 @@ public class RabbitMqConfiguration {
   }
 
   @Bean
-  @ConditionalOnProperty(prefix = "rabbitmq.auto-config", name = "re-queue-config.queue.name")
+  @ConditionalOnProperty(prefix = "rabbitmq.auto-config", name = "re-queue-config.enabled", matchIfMissing = true)
   public ReQueueConsumer reQueueConsumer() {
     return new ReQueueConsumer();
   }
@@ -100,6 +102,12 @@ public class RabbitMqConfiguration {
   @ConditionalOnMissingBean(ReQueuePolicy.class)
   public ReQueuePolicy reQueuePolicy() {
     return new ThresholdReQueuePolicy();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(RabbitAdmin.class)
+  public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+    return new RabbitAdmin(connectionFactory);
   }
 
 }
