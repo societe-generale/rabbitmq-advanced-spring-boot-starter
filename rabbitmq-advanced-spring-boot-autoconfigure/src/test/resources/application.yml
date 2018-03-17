@@ -1,6 +1,10 @@
 spring:
   application:
     name: my-amqp-app
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
 
 rabbitmq:
   auto-config:
@@ -22,7 +26,8 @@ rabbitmq:
         durable: false
       queue-postfix: .dlq
     re-queue-config:
-      auto-requeue-enabled: false
+      enabled: true
+      auto-requeue-enabled: true
       exchange:
         name: my-amqp-app-requeue-exchange-${user.name}
       queue:
