@@ -18,7 +18,6 @@ package com.societegenerale.commons.amqp.auto.configuration;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Queue;
@@ -26,6 +25,10 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -36,8 +39,8 @@ public class SpringBootAmqpAutoConfigurationTest {
 
   @Test
   public void checkRabbitMqAutoConfigurationDeclaration() {
-    Mockito.verify(rabbitAdmin, Mockito.times(5)).declareExchange(Mockito.any(Exchange.class));
-    Mockito.verify(rabbitAdmin, Mockito.times(6)).declareQueue(Mockito.any(Queue.class));
-    Mockito.verify(rabbitAdmin, Mockito.times(6)).declareBinding(Mockito.any(Binding.class));
+    verify(rabbitAdmin, times(5)).declareExchange(any(Exchange.class));
+    verify(rabbitAdmin, times(6)).declareQueue(any(Queue.class));
+    verify(rabbitAdmin, times(6)).declareBinding(any(Binding.class));
   }
 }
