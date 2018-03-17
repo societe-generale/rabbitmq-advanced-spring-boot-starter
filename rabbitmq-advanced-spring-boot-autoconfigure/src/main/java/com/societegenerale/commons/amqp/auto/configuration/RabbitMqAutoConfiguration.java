@@ -67,13 +67,9 @@ public class RabbitMqAutoConfiguration {
   }
 
   private Exchange loadDeadLetterExchangeConfig() {
-    Exchange deadLetterExchange;
-    if (rabbitConfig.getDeadLetterConfig() != null && rabbitConfig.getDeadLetterConfig().getDeadLetterExchange() != null) {
-      deadLetterExchange = rabbitConfig.getDeadLetterConfig().getDeadLetterExchange().buildExchange(rabbitConfig.getDefaultExchange());
-    }
-    else {
-      deadLetterExchange = ExchangeConfig.builder().name("DEFAULT-DEAD-LETTER-EXCHANGE.DLQ").type(ExchangeTypes.TOPIC).build().buildExchange(rabbitConfig.getDefaultExchange());
-    }
+    ExchangeConfig deadLetterExchangeConfig =  (rabbitConfig.getDeadLetterConfig() != null && rabbitConfig.getDeadLetterConfig().getDeadLetterExchange() != null) ?
+       rabbitConfig.getDeadLetterConfig().getDeadLetterExchange():ExchangeConfig.builder().name("DEFAULT-DEAD-LETTER-EXCHANGE.DLQ").type(ExchangeTypes.TOPIC).build();
+    Exchange deadLetterExchange = deadLetterExchangeConfig.buildExchange(rabbitConfig.getDefaultExchange());
     rabbitAdmin.declareExchange(deadLetterExchange);
     log.info("Auto configuring dead letter exchange: Key = {} , DeadLetterExchange = {{}}", deadLetterExchange.getName(), deadLetterExchange);
     return deadLetterExchange;

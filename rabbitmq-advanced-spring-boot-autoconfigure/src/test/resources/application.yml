@@ -27,7 +27,7 @@ rabbitmq:
       queue-postfix: .dlq
     re-queue-config:
       enabled: true
-      auto-requeue-enabled: false
+      auto-requeue-enabled: true
       exchange:
         name: my-amqp-app-requeue-exchange-${user.name}
       queue:
