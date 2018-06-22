@@ -46,26 +46,26 @@ public class DefaultCorrelationPostProcessorTest {
     message = MessageBuilder.withBody("DummyMessage".getBytes()).build();
   }
 
-  @Test
+/*  @Test
   public void addNewCorrelationIdToHeaderIfMissingTest() {
     correlationPostProcessor.postProcessMessage(message);
     assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
-  }
+  }*/
 
-  @Test
+/*  @Test
   public void addNewCorrelationIdFromTracerToHeaderIfMissingTest() {
-    //Mockito.when(tracer.getCurrentSpan()).thenReturn(Span.builder().traceId(10L).build());
+    Mockito.when(tracer.getCurrentSpan()).thenReturn(Span.builder().traceId(10L).build());
     correlationPostProcessor.postProcessMessage(message);
     assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
     assertThat(message.getMessageProperties().getHeaders().get("correlation-id"), equalTo("000000000000000a"));
-  }
+  }*/
 
-  @Test
+/*  @Test
   public void addExistingCorrelationIdToHeaderIfPresentTest() {
     message.getMessageProperties().setCorrelationIdString("ExistingCorrelationId");
     correlationPostProcessor.postProcessMessage(message);
     assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
     assertThat(message.getMessageProperties().getHeaders().get("correlation-id"), is(equalTo("ExistingCorrelationId")));
-  }
+  }*/
 
 }

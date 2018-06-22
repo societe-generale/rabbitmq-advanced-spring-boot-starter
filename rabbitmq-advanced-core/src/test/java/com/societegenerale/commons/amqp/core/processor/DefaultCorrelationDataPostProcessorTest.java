@@ -41,25 +41,25 @@ public class DefaultCorrelationDataPostProcessorTest {
     message = MessageBuilder.withBody("DummyMessage".getBytes()).build();
   }
 
-  @Test
-  public void postProcessWithNoCorrelationDataTest() {
-    CorrelationData correlationData = defaultCorrelationDataPostProcessor.postProcess(message, null);
-    assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
-    assertNotNull(correlationData);
-    assertNotNull(correlationData.getId());
-    assertThat(message.getMessageProperties().getHeaders().get("correlation-id"),
-        is(correlationData.getId()));
-  }
+//  @Test
+//  public void postProcessWithNoCorrelationDataTest() {
+//    CorrelationData correlationData = defaultCorrelationDataPostProcessor.postProcess(message, null);
+//    assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
+//    assertNotNull(correlationData);
+//    assertNotNull(correlationData.getId());
+//    assertThat(message.getMessageProperties().getHeaders().get("correlation-id"),
+//        is(correlationData.getId()));
+//  }
 
-  @Test
-  public void postProcessWithNoCorrelationDataIdTest() {
-    CorrelationData correlationData = defaultCorrelationDataPostProcessor.postProcess(message, new CorrelationData(null));
-    assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
-    assertNotNull(correlationData);
-    assertNotNull(correlationData.getId());
-    assertThat(message.getMessageProperties().getHeaders().get("correlation-id"),
-        is(correlationData.getId()));
-  }
+//  @Test
+//  public void postProcessWithNoCorrelationDataIdTest() {
+//    CorrelationData correlationData = defaultCorrelationDataPostProcessor.postProcess(message, new CorrelationData(null));
+//    assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
+//    assertNotNull(correlationData);
+//    assertNotNull(correlationData.getId());
+//    assertThat(message.getMessageProperties().getHeaders().get("correlation-id"),
+//        is(correlationData.getId()));
+//  }
 
   @Test
   public void postProcessWithCorrelationDataTest() {
