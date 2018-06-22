@@ -16,13 +16,12 @@
 
 package com.societegenerale.commons.amqp.core.processor;
 
+import brave.Tracer;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
-import org.springframework.cloud.sleuth.Span;
-import org.springframework.cloud.sleuth.Tracer;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -55,7 +54,7 @@ public class DefaultCorrelationPostProcessorTest {
 
   @Test
   public void addNewCorrelationIdFromTracerToHeaderIfMissingTest() {
-    Mockito.when(tracer.getCurrentSpan()).thenReturn(Span.builder().traceId(10L).build());
+    //Mockito.when(tracer.getCurrentSpan()).thenReturn(Span.builder().traceId(10L).build());
     correlationPostProcessor.postProcessMessage(message);
     assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
     assertThat(message.getMessageProperties().getHeaders().get("correlation-id"), equalTo("000000000000000a"));
