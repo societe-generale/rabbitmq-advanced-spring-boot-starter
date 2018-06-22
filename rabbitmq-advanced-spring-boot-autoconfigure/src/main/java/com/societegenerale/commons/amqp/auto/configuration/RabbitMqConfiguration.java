@@ -16,6 +16,7 @@
 
 package com.societegenerale.commons.amqp.auto.configuration;
 
+import brave.Tracer;
 import com.societegenerale.commons.amqp.core.config.RabbitConfig;
 import com.societegenerale.commons.amqp.core.processor.CorrelationPostProcessor;
 import com.societegenerale.commons.amqp.core.processor.DefaultCorrelationDataPostProcessor;
@@ -36,7 +37,6 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
