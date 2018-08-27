@@ -33,11 +33,8 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.retry.MessageRecoverer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.amqp.support.converter.SimpleMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,19 +56,10 @@ public class RabbitMqConfiguration {
   }
 
   @Bean
-  @ConditionalOnClass(name = "com.fasterxml.jackson.databind.ObjectMapper")
   @ConditionalOnMissingBean(MessageConverter.class)
   public MessageConverter messageConverter() {
     return new Jackson2JsonMessageConverter();
   }
-
-  @Bean
-  @ConditionalOnMissingClass("com.fasterxml.jackson.databind.ObjectMapper")
-  @ConditionalOnMissingBean(MessageConverter.class)
-  public MessageConverter simpleMessageConverter() {
-    return new SimpleMessageConverter();
-  }
-
 
   @Bean
   @ConditionalOnMissingBean(MessageRecoverer.class)
