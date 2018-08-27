@@ -37,7 +37,7 @@ public class DefaultCorrelationDataPostProcessor implements CorrelationDataPostP
     CorrelationData resultCorrelationData = correlationData == null ? new CorrelationData() : correlationData;
     MessageProperties messageProperties = message.getMessageProperties();
     if (correlationData != null && correlationData.getId() != null) {
-      messageProperties.setCorrelationIdString(correlationData.getId());
+      messageProperties.setCorrelationId(correlationData.getId());
     }
     correlationPostProcessor.postProcessMessage(message);
     resultCorrelationData.setId(messageProperties.getCorrelationIdString());

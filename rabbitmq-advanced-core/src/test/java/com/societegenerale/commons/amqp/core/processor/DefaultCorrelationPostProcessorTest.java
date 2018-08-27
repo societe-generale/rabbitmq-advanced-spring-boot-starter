@@ -16,13 +16,15 @@
 
 package com.societegenerale.commons.amqp.core.processor;
 
+import brave.Tracer;
+import brave.Tracing;
+import brave.propagation.CurrentTraceContext;
+import brave.propagation.StrictCurrentTraceContext;
+import brave.propagation.TraceContext;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
-import org.springframework.cloud.sleuth.Span;
-import org.springframework.cloud.sleuth.Tracer;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -42,7 +44,11 @@ public class DefaultCorrelationPostProcessorTest {
 
   @Before
   public void setUp() {
-    tracer = Mockito.mock(Tracer.class);
+    CurrentTraceContext currentTraceContext = new StrictCurrentTraceContext();
+    currentTraceContext.newScope(TraceContext.newBuilder().traceId(10L).spanId(10L).build());
+    tracer = Tracing.newBuilder()
+            .currentTraceContext(currentTraceContext)
+            .build().tracer();
     correlationPostProcessor = new DefaultCorrelationPostProcessor(tracer);
     message = MessageBuilder.withBody("DummyMessage".getBytes()).build();
   }
@@ -55,15 +61,14 @@ public class DefaultCorrelationPostProcessorTest {
 
   @Test
   public void addNewCorrelationIdFromTracerToHeaderIfMissingTest() {
-    Mockito.when(tracer.getCurrentSpan()).thenReturn(Span.builder().traceId(10L).build());
     correlationPostProcessor.postProcessMessage(message);
     assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
-    assertThat(message.getMessageProperties().getHeaders().get("correlation-id"), equalTo("000000000000000a"));
+    assertThat(message.getMessageProperties().getHeaders().get("correlation-id"), equalTo(tracer.currentSpan().context().traceIdString()));
   }
 
   @Test
   public void addExistingCorrelationIdToHeaderIfPresentTest() {
-    message.getMessageProperties().setCorrelationIdString("ExistingCorrelationId");
+    message.getMessageProperties().setCorrelationId("ExistingCorrelationId");
     correlationPostProcessor.postProcessMessage(message);
     assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
     assertThat(message.getMessageProperties().getHeaders().get("correlation-id"), is(equalTo("ExistingCorrelationId")));

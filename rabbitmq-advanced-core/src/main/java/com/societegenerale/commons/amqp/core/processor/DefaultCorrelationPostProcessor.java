@@ -16,11 +16,10 @@
 
 package com.societegenerale.commons.amqp.core.processor;
 
+import brave.Tracer;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.sleuth.Span;
-import org.springframework.cloud.sleuth.Tracer;
 
 import java.util.UUID;
 
@@ -39,11 +38,11 @@ public class DefaultCorrelationPostProcessor implements CorrelationPostProcessor
   @Override
   public Message postProcessMessage(final Message message) {
     MessageProperties messageProperties = message.getMessageProperties();
-    String correlationId = messageProperties.getCorrelationIdString();
+    String correlationId = messageProperties.getCorrelationId();
     if (correlationId == null) {
-      correlationId = (tracer!=null && tracer.getCurrentSpan()!=null)?
-          Span.idToHex(tracer.getCurrentSpan().getTraceId()):UUID.randomUUID().toString();
-      messageProperties.setCorrelationIdString(correlationId);
+      correlationId = (tracer!=null && tracer.currentSpan()!=null)?
+              tracer.currentSpan().context().traceIdString():UUID.randomUUID().toString();
+      messageProperties.setCorrelationId(correlationId);
     }
     messageProperties.getHeaders().put("correlation-id", correlationId);
     return message;
