@@ -43,14 +43,14 @@ Please add below pom dependency for rabbitmq-advanced-spring-boot-starter
     <dependency>
         <groupId>com.societegenerale</groupId>
         <artifactId>rabbitmq-advanced-spring-boot-starter</artifactId>
-        <version>1.0.1.RELEASE</version>
+        <version>2.0.0.RELEASE</version>
         <!-- check the latest version -->
     </dependency>
 ```
 
 ### Spring RabbitMQ Configuration
 
-Below is the sample spring rabbitmq configuration.`
+Below is the sample spring rabbitmq configuration.
 
 ```yaml
 spring:
@@ -62,10 +62,11 @@ spring:
     ssl:
       enabled: false
     listener:
-      default-requeue-rejected: false
-      retry:
-        enabled: true
-      acknowledge-mode: auto
+      simple:
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+        acknowledge-mode: auto
 ```
 
 ### RabbitMQ Auto Configuration
