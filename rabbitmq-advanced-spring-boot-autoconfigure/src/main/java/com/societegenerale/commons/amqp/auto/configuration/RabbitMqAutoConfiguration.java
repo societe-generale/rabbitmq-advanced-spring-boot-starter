@@ -16,16 +16,19 @@
 
 package com.societegenerale.commons.amqp.auto.configuration;
 
+import brave.spring.rabbit.SpringRabbitTracing;
 import com.societegenerale.commons.amqp.core.config.*;
+import com.societegenerale.commons.amqp.core.config.ExchangeTypes;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Exchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.core.CorrelationDataPostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.CollectionUtils;
@@ -39,7 +42,7 @@ import java.util.Map;
 @EnableRabbit
 @ConditionalOnProperty(prefix = "rabbitmq.auto-config", name = "enabled", matchIfMissing = true)
 @Slf4j
-public class RabbitMqAutoConfiguration {
+public class RabbitMqAutoConfiguration implements ApplicationContextAware {
 
   private RabbitConfig rabbitConfig;
 
@@ -139,4 +142,12 @@ public class RabbitMqAutoConfiguration {
     }
   }
 
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) {
+    RabbitTemplate rabbitTemplate = applicationContext.getBean(RabbitTemplate.class);
+    SpringRabbitTracing springRabbitTracing = applicationContext.getBean(SpringRabbitTracing.class);
+    rabbitTemplate.setBeforePublishPostProcessors(applicationContext.getBeansOfType(MessagePostProcessor.class).values().toArray(new MessagePostProcessor[0]));
+    rabbitTemplate.setCorrelationDataPostProcessor(applicationContext.getBean(CorrelationDataPostProcessor.class));
+    springRabbitTracing.decorateRabbitTemplate(rabbitTemplate);
+  }
 }
