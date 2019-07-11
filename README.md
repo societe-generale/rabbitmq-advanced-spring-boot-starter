@@ -548,6 +548,8 @@ The correlation id will be added to the message automatically as part of tracer.
 
 Main author of the project is [Anand Manissery](https://github.com/anandmnair). For any question or suggestion please initiate a discussion through the [project issues](https://github.com/societe-generale/rabbitmq-advanced-spring-boot-starter/issues).
 
+[Contrubutors](https://github.com/societe-generale/rabbitmq-advanced-spring-boot-starter/graphs/contributors)
+
 Pull requests are welcome. We follow a strict test driven approach, so make sure your contribution is well tested.  
 
 ### Thanks and acknowledgement
