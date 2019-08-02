@@ -57,7 +57,7 @@ public class DeadLetterMessageRecoverer implements MessageRecoverer {
     headers.put("x-dead-letter-exchange", deadLetterExchangeName);
     headers.put("x-dead-letter-queue", deadLetterRoutingKey);
     if(headers.containsKey("correlation-id")) {
-      message.getMessageProperties().setCorrelationIdString((String) headers.get("correlation-id"));
+      message.getMessageProperties().setCorrelationId((String) headers.get("correlation-id"));
     }
 
     headers.putAll(loadAdditionalHeaders(message, cause));
