@@ -18,8 +18,8 @@ package com.societegenerale.commons.amqp.core.processor;
 
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.CorrelationDataPostProcessor;
-import org.springframework.amqp.rabbit.support.CorrelationData;
 
 /**
  * Created by Anand Manissery on 7/13/2017.
@@ -40,7 +40,7 @@ public class DefaultCorrelationDataPostProcessor implements CorrelationDataPostP
       messageProperties.setCorrelationId(correlationData.getId());
     }
     correlationPostProcessor.postProcessMessage(message);
-    resultCorrelationData.setId(messageProperties.getCorrelationIdString());
+    resultCorrelationData.setId(messageProperties.getCorrelationId());
     return resultCorrelationData;
   }
 
