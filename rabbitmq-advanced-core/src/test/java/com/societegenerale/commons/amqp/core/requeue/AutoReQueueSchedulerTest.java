@@ -17,22 +17,18 @@
 package com.societegenerale.commons.amqp.core.requeue;
 
 import com.societegenerale.commons.amqp.core.config.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
  * Created by Anand Manissery on 7/13/2017.
  */
-@RunWith(SpringRunner.class)
+
 @SpringBootTest
 public class AutoReQueueSchedulerTest {
 
@@ -42,7 +38,7 @@ public class AutoReQueueSchedulerTest {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     RabbitConfig rabbitConfig = RabbitConfig.builder()
         .deadLetterConfig(DeadLetterConfig.builder()

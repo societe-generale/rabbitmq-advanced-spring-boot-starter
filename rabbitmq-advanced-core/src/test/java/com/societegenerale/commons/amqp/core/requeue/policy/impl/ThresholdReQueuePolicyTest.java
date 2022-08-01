@@ -16,63 +16,60 @@
 
 package com.societegenerale.commons.amqp.core.requeue.policy.impl;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.core.MessagePropertiesBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by Anand Manissery on 7/14/2017.
  */
-@RunWith(SpringRunner.class)
+
 @SpringBootTest
 public class ThresholdReQueuePolicyTest {
 
-  @Autowired
-  private ThresholdReQueuePolicy thresholdReQueuePolicy;
+    @Autowired
+    private ThresholdReQueuePolicy thresholdReQueuePolicy;
 
-  private Message message;
+    private Message message;
 
-  @Before
-  public void setUp() {
-    MessageProperties messageProperties = MessagePropertiesBuilder.newInstance().build();
-    message = MessageBuilder.withBody("DummyMessage".getBytes()).andProperties(messageProperties).build();
-  }
+    @BeforeEach
+    public void setUp() {
+        MessageProperties messageProperties = MessagePropertiesBuilder.newInstance().build();
+        message = MessageBuilder.withBody("DummyMessage".getBytes()).andProperties(messageProperties).build();
+    }
 
-  @Test
-  public void shouldReQueueForAnyNewMessage() throws Exception {
-    assertTrue(thresholdReQueuePolicy.canReQueue(message));
-    assertThat(message.getMessageProperties().getHeaders().get("x-requeue-count"), equalTo(1));
-  }
+    @Test
+    public void shouldReQueueForAnyNewMessage() throws Exception {
+        assertTrue(thresholdReQueuePolicy.canReQueue(message));
+        assertEquals(message.getMessageProperties().getHeaders().get("x-requeue-count"), 1);
+    }
 
-  @Test
-  public void shouldReQueueRequeueCountIsLessThanThreshold() throws Exception {
-    message.getMessageProperties().getHeaders().put("x-requeue-count", 1);
-    assertTrue(thresholdReQueuePolicy.canReQueue(message));
-    assertThat(message.getMessageProperties().getHeaders().get("x-requeue-count"), equalTo(2));
-  }
+    @Test
+    public void shouldReQueueRequeueCountIsLessThanThreshold() throws Exception {
+        message.getMessageProperties().getHeaders().put("x-requeue-count", 1);
+        assertTrue(thresholdReQueuePolicy.canReQueue(message));
+        assertEquals(message.getMessageProperties().getHeaders().get("x-requeue-count"), 2);
+    }
 
-  @Test
-  public void shouldNotReQueueRequeueCountIsEqualToThreshold() throws Exception {
-    message.getMessageProperties().getHeaders().put("x-requeue-count", 3);
-    assertFalse(thresholdReQueuePolicy.canReQueue(message));
-    assertThat(message.getMessageProperties().getHeaders().get("x-requeue-count"), equalTo(3));
-  }
+    @Test
+    public void shouldNotReQueueRequeueCountIsEqualToThreshold() throws Exception {
+        message.getMessageProperties().getHeaders().put("x-requeue-count", 3);
+        assertFalse(thresholdReQueuePolicy.canReQueue(message));
+        assertEquals(message.getMessageProperties().getHeaders().get("x-requeue-count"), 3);
+    }
 
-  @Test
-  public void shouldNotReQueueRequeueCountIsGreaterThanOrEqualToThreshold() throws Exception {
-    message.getMessageProperties().getHeaders().put("x-requeue-count", 3);
-    assertFalse(thresholdReQueuePolicy.canReQueue(message));
-    assertThat(message.getMessageProperties().getHeaders().get("x-requeue-count"), equalTo(3));
-  }
+    @Test
+    public void shouldNotReQueueRequeueCountIsGreaterThanOrEqualToThreshold() throws Exception {
+        message.getMessageProperties().getHeaders().put("x-requeue-count", 3);
+        assertFalse(thresholdReQueuePolicy.canReQueue(message));
+        assertEquals(message.getMessageProperties().getHeaders().get("x-requeue-count"), 3);
+    }
 
 }

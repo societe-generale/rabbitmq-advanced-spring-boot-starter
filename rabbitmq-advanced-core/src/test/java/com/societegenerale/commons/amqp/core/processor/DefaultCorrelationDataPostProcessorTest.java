@@ -16,15 +16,14 @@
 
 package com.societegenerale.commons.amqp.core.processor;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by anand on 02/07/17.
@@ -35,7 +34,7 @@ public class DefaultCorrelationDataPostProcessorTest {
 
   private Message message;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     defaultCorrelationDataPostProcessor = new DefaultCorrelationDataPostProcessor(new DefaultCorrelationPostProcessor(null));
     message = MessageBuilder.withBody("DummyMessage".getBytes()).build();
@@ -68,10 +67,8 @@ public class DefaultCorrelationDataPostProcessorTest {
     assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
     assertNotNull(correlationData);
     assertNotNull(correlationData.getId());
-    assertThat(message.getMessageProperties().getHeaders().get("correlation-id"),
-        is(inputCorrelationData.getId()));
-    assertThat(correlationData.getId(),
-        is(inputCorrelationData.getId()));
+    assertEquals(message.getMessageProperties().getHeaders().get("correlation-id"), inputCorrelationData.getId());
+    assertEquals(correlationData.getId(), inputCorrelationData.getId());
   }
 
 
