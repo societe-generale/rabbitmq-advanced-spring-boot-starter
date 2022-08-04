@@ -21,15 +21,13 @@ import brave.Tracing;
 import brave.propagation.CurrentTraceContext;
 import brave.propagation.StrictCurrentTraceContext;
 import brave.propagation.TraceContext;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by anand on 02/07/17.
@@ -42,7 +40,7 @@ public class DefaultCorrelationPostProcessorTest {
 
   private Tracer tracer;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     CurrentTraceContext currentTraceContext = new StrictCurrentTraceContext();
     currentTraceContext.newScope(TraceContext.newBuilder().traceId(10L).spanId(10L).build());
@@ -63,7 +61,7 @@ public class DefaultCorrelationPostProcessorTest {
   public void addNewCorrelationIdFromTracerToHeaderIfMissingTest() {
     correlationPostProcessor.postProcessMessage(message);
     assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
-    assertThat(message.getMessageProperties().getHeaders().get("correlation-id"), equalTo(tracer.currentSpan().context().traceIdString()));
+    assertEquals(message.getMessageProperties().getHeaders().get("correlation-id"), tracer.currentSpan().context().traceIdString());
   }
 
   @Test
@@ -71,7 +69,7 @@ public class DefaultCorrelationPostProcessorTest {
     message.getMessageProperties().setCorrelationId("ExistingCorrelationId");
     correlationPostProcessor.postProcessMessage(message);
     assertNotNull(message.getMessageProperties().getHeaders().get("correlation-id"));
-    assertThat(message.getMessageProperties().getHeaders().get("correlation-id"), is(equalTo("ExistingCorrelationId")));
+    assertEquals(message.getMessageProperties().getHeaders().get("correlation-id"), "ExistingCorrelationId");
   }
 
 }

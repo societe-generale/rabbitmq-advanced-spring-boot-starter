@@ -17,19 +17,19 @@
 package com.societegenerale.commons.amqp.core.config;
 
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.amqp.core.AbstractExchange;
-import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(OutputCaptureExtension.class)
 public class ExchangeConfigTest {
 
   private ExchangeConfig exchangeConfig;
@@ -40,10 +40,7 @@ public class ExchangeConfigTest {
 
   private String exchangeName = "exchange-1";
 
-  @Rule
-  public OutputCapture outputCapture = new OutputCapture();
-
-  @Before
+  @BeforeEach
   public void setUp() {
     exchangeConfig = ExchangeConfig.builder().build();
     expectedExchangeConfig = ExchangeConfig.builder().build();
@@ -60,10 +57,10 @@ public class ExchangeConfigTest {
 
   @Test
   public void exchangeConfigeHashcodeTest() {
-    assertThat(exchangeConfig.hashCode(), equalTo(expectedExchangeConfig.hashCode()));
+    assertEquals(exchangeConfig.hashCode(), expectedExchangeConfig.hashCode());
     exchangeConfig.setDefaultConfigApplied(false);
     expectedExchangeConfig.setDefaultConfigApplied(true);
-    assertThat(exchangeConfig.hashCode(), equalTo(expectedExchangeConfig.hashCode()));
+    assertEquals(exchangeConfig.hashCode(), expectedExchangeConfig.hashCode());
   }
 
   @Test
@@ -85,7 +82,7 @@ public class ExchangeConfigTest {
     exchangeConfig = ExchangeConfig.builder().build().applyDefaultConfig(defaultExchangeConfig);
     expectedExchangeConfig = ExchangeConfig.builder().type(ExchangeTypes.TOPIC).durable(false).autoDelete(false).delayed(false).internal(false).build();
     assertNull(exchangeConfig.getName());
-    assertThat(exchangeConfig.getType(), equalTo(ExchangeTypes.TOPIC));
+    assertEquals(exchangeConfig.getType(), ExchangeTypes.TOPIC);
     assertFalse(exchangeConfig.getDurable());
     assertFalse(exchangeConfig.getAutoDelete());
     assertFalse(exchangeConfig.getDelayed());
@@ -93,43 +90,43 @@ public class ExchangeConfigTest {
     assertNotNull(exchangeConfig.getArguments());
     assertTrue(exchangeConfig.isDefaultConfigApplied());
     assertTrue(CollectionUtils.isEmpty(exchangeConfig.getArguments()));
-    assertThat(exchangeConfig, equalTo(expectedExchangeConfig));
+    assertEquals(exchangeConfig, expectedExchangeConfig);
   }
 
   @Test
-  public void exchangeConfigWithNameAndValidationSuccessTest() {
+  public void exchangeConfigWithNameAndValidationSuccessTest(CapturedOutput outputCapture) {
     exchangeConfig = ExchangeConfig.builder().name(exchangeName).build();
     assertTrue(exchangeConfig.validate());
-    assertThat(outputCapture.toString(), containsString(String.format("Exchange configuration validated successfully for exchange '%s'", exchangeName)));
+    assertTrue(outputCapture.getOut().contains(String.format("Exchange configuration validated successfully for exchange '%s'", exchangeName)));
   }
 
   @Test
-  public void exchangeConfigWithoutNameAndValidationFailTest() {
+  public void exchangeConfigWithoutNameAndValidationFailTest(CapturedOutput outputCapture) {
     exchangeConfig = ExchangeConfig.builder().build();
     assertFalse(exchangeConfig.validate());
-    assertThat(outputCapture.toString(), containsString(String.format("Invalid Exchange Configuration : Name must be provided for an exchange")));
+    assertTrue(outputCapture.getOut().contains(String.format("Invalid Exchange Configuration : Name must be provided for an exchange")));
   }
 
   @Test
-  public void exchangeConfigWithoutNameAndDefaultConfigurationWithNameAndValidationFailTest() {
+  public void exchangeConfigWithoutNameAndDefaultConfigurationWithNameAndValidationFailTest(CapturedOutput outputCapture) {
     defaultExchangeConfig = ExchangeConfig.builder().name(exchangeName).build();
     exchangeConfig = ExchangeConfig.builder().build().applyDefaultConfig(defaultExchangeConfig);
     assertFalse(exchangeConfig.validate());
-    assertThat(outputCapture.toString(), containsString(String.format("Invalid Exchange Configuration : Name must be provided for an exchange")));
+    assertTrue(outputCapture.getOut().contains(String.format("Invalid Exchange Configuration : Name must be provided for an exchange")));
   }
 
   @Test
   public void exchangeConfigWithOnlyExchangeNameAndDefaultConfigurationAppliedTest() {
     exchangeConfig = ExchangeConfig.builder().name(exchangeName).build().applyDefaultConfig(defaultExchangeConfig);
     expectedExchangeConfig = ExchangeConfig.builder().name(exchangeName).type(ExchangeTypes.TOPIC).durable(false).autoDelete(false).delayed(false).internal(false).build();
-    assertThat(exchangeConfig, equalTo(expectedExchangeConfig));
+    assertEquals(exchangeConfig, expectedExchangeConfig);
   }
 
   @Test
   public void exchangeConfigWithOnlyExchangeNameAndNoDefaultConfigurationAppliedTest() {
     exchangeConfig = ExchangeConfig.builder().name(exchangeName).build();
     expectedExchangeConfig = ExchangeConfig.builder().name(exchangeName).type(null).durable(null).autoDelete(null).delayed(null).internal(null).build();
-    assertThat(exchangeConfig, equalTo(expectedExchangeConfig));
+    assertEquals(exchangeConfig, expectedExchangeConfig);
   }
 
   @Test
@@ -148,7 +145,7 @@ public class ExchangeConfigTest {
         .argument("key1", "value1")
         .build();
 
-    assertThat(exchangeConfig, equalTo(expectedExchangeConfig));
+    assertEquals(exchangeConfig, expectedExchangeConfig);
   }
 
   @Test
@@ -168,7 +165,7 @@ public class ExchangeConfigTest {
         .argument("key1", "NEW_VALUE").argument("key2", "value2")
         .build();
 
-    assertThat(exchangeConfig, equalTo(expectedExchangeConfig));
+    assertEquals(exchangeConfig, expectedExchangeConfig);
   }
 
   @Test
@@ -215,13 +212,13 @@ public class ExchangeConfigTest {
   }
 
   private void assertExchange(AbstractExchange exchange, ExchangeConfig exchangeConfig) {
-    assertThat(exchange.getName(), equalTo(exchangeConfig.getName()));
-    assertThat(exchange.getType(), equalTo(exchangeConfig.getType().getValue()));
-    assertThat(exchange.isDurable(), equalTo(exchangeConfig.getDurable()));
-    assertThat(exchange.isAutoDelete(), equalTo(exchangeConfig.getAutoDelete()));
-    assertThat(exchange.isDelayed(), equalTo(exchangeConfig.getDelayed()));
-    assertThat(exchange.isInternal(), equalTo(exchangeConfig.getInternal()));
-    assertThat(exchange.getArguments(), equalTo(exchangeConfig.getArguments()));
+    assertEquals(exchange.getName(), exchangeConfig.getName());
+    assertEquals(exchange.getType(), exchangeConfig.getType().getValue());
+    assertEquals(exchange.isDurable(), exchangeConfig.getDurable());
+    assertEquals(exchange.isAutoDelete(), exchangeConfig.getAutoDelete());
+    assertEquals(exchange.isDelayed(), exchangeConfig.getDelayed());
+    assertEquals(exchange.isInternal(), exchangeConfig.getInternal());
+    assertEquals(exchange.getArguments(), exchangeConfig.getArguments());
   }
 
 }

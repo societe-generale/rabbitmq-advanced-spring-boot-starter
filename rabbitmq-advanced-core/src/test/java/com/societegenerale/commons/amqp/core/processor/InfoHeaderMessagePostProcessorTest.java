@@ -16,8 +16,8 @@
 
 package com.societegenerale.commons.amqp.core.processor;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
@@ -25,10 +25,8 @@ import org.springframework.core.env.Environment;
 
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by Anand Manissery on 02/07/17.
@@ -41,7 +39,7 @@ public class InfoHeaderMessagePostProcessorTest {
 
   private Environment environment;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     environment = Mockito.mock(Environment.class);
     Mockito.when(environment.getProperty("spring.application.name", String.class)).thenReturn("my-application-name");
@@ -56,8 +54,8 @@ public class InfoHeaderMessagePostProcessorTest {
   public void addInfoHeadersToMessage() {
     infoHeaderMessagePostProcessor.postProcessMessage(message);
     Map<String, Object> headers = (Map<String, Object>) message.getMessageProperties().getHeaders().get("info");
-    assertThat(headers.get("info-key"), is(equalTo("info-value")));
-    assertThat(headers.get("spring-application-name"), is(equalTo("my-application-name")));
+    assertEquals(headers.get("info-key"), "info-value");
+    assertEquals(headers.get("spring-application-name"), "my-application-name");
     assertNotNull(headers.get("execution-time"));
   }
 
@@ -66,7 +64,7 @@ public class InfoHeaderMessagePostProcessorTest {
     infoHeaderMessagePostProcessor.getHeaders().clear();
     infoHeaderMessagePostProcessor.postProcessMessage(message);
     Map<String, Object> headers = (Map<String, Object>) message.getMessageProperties().getHeaders().get("info");
-    assertThat(headers.get("spring-application-name"), is(equalTo("my-application-name")));
+    assertEquals(headers.get("spring-application-name"), "my-application-name");
     assertNotNull(headers.get("execution-time"));
   }
 

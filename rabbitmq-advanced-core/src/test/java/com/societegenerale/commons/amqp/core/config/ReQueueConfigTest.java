@@ -16,96 +16,96 @@
 
 package com.societegenerale.commons.amqp.core.config;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReQueueConfigTest {
 
-  private ReQueueConfig reQueueConfig;
+    private ReQueueConfig reQueueConfig;
 
-  private ExchangeConfig exchangeConfig;
+    private ExchangeConfig exchangeConfig;
 
-  private QueueConfig queueConfig;
+    private QueueConfig queueConfig;
 
-  @Before
-  public void setUp() {
-    exchangeConfig = ExchangeConfig.builder().name("requeue-exchange").build();
-    queueConfig = QueueConfig.builder().name("requeue").build();
-    reQueueConfig = ReQueueConfig.builder()
-        .exchange(exchangeConfig)
-        .queue(queueConfig)
-        .routingKey("requeue.key")
-        .build();
-  }
+    @BeforeEach
+    public void setUp() {
+        exchangeConfig = ExchangeConfig.builder().name("requeue-exchange").build();
+        queueConfig = QueueConfig.builder().name("requeue").build();
+        reQueueConfig = ReQueueConfig.builder()
+                .exchange(exchangeConfig)
+                .queue(queueConfig)
+                .routingKey("requeue.key")
+                .build();
+    }
 
-  @Test
-  public void reQueueConfigEqualsTest() {
-    reQueueConfig = new ReQueueConfig();
-    reQueueConfig.setDefaultConfigApplied(false);
-    ReQueueConfig expectedReQueueConfig = new ReQueueConfig();
-    expectedReQueueConfig.setDefaultConfigApplied(true);
-    assertTrue(reQueueConfig.equals(expectedReQueueConfig));
-  }
+    @Test
+    public void reQueueConfigEqualsTest() {
+        reQueueConfig = new ReQueueConfig();
+        reQueueConfig.setDefaultConfigApplied(false);
+        ReQueueConfig expectedReQueueConfig = new ReQueueConfig();
+        expectedReQueueConfig.setDefaultConfigApplied(true);
+        assertTrue(reQueueConfig.equals(expectedReQueueConfig));
+    }
 
-  @Test
-  public void validateWhenAutoConfigurationDisabledTest() {
-    reQueueConfig.setAutoRequeueEnabled(false);
-    assertTrue(reQueueConfig.validate());
-  }
+    @Test
+    public void validateWhenAutoConfigurationDisabledTest() {
+        reQueueConfig.setAutoRequeueEnabled(false);
+        assertTrue(reQueueConfig.validate());
+    }
 
-  @Test
-  public void validateWhenAutoConfigurationEnabledTest() {
-    reQueueConfig.setAutoRequeueEnabled(true);
-    reQueueConfig.setCron("* * * * *");
-    assertTrue(reQueueConfig.validate());
-  }
+    @Test
+    public void validateWhenAutoConfigurationEnabledTest() {
+        reQueueConfig.setAutoRequeueEnabled(true);
+        reQueueConfig.setCron("* * * * *");
+        assertTrue(reQueueConfig.validate());
+    }
 
-  @Test
-  public void invalidWhenExchangeIsNullTest() {
-    reQueueConfig.setExchange(null);
-    Assert.assertFalse(reQueueConfig.validate());
-  }
+    @Test
+    public void invalidWhenExchangeIsNullTest() {
+        reQueueConfig.setExchange(null);
+        assertFalse(reQueueConfig.validate());
+    }
 
-  @Test
-  public void invalidWhenExchangeIsInvalidTest() {
-    exchangeConfig.setName(null);
-    reQueueConfig.setExchange(exchangeConfig);
-    Assert.assertFalse(reQueueConfig.validate());
-  }
+    @Test
+    public void invalidWhenExchangeIsInvalidTest() {
+        exchangeConfig.setName(null);
+        reQueueConfig.setExchange(exchangeConfig);
+        assertFalse(reQueueConfig.validate());
+    }
 
-  @Test
-  public void invalidWhenQueueIsNullTest() {
-    reQueueConfig.setQueue(null);
-    Assert.assertFalse(reQueueConfig.validate());
-  }
+    @Test
+    public void invalidWhenQueueIsNullTest() {
+        reQueueConfig.setQueue(null);
+        assertFalse(reQueueConfig.validate());
+    }
 
-  @Test
-  public void invalidWhenQueueIsInvalidTest() {
-    queueConfig.setName(null);
-    reQueueConfig.setQueue(queueConfig);
-    Assert.assertFalse(reQueueConfig.validate());
-  }
+    @Test
+    public void invalidWhenQueueIsInvalidTest() {
+        queueConfig.setName(null);
+        reQueueConfig.setQueue(queueConfig);
+        assertFalse(reQueueConfig.validate());
+    }
 
-  @Test
-  public void invalidWhenRoutingKeyIsNullTest() {
-    reQueueConfig.setRoutingKey(null);
-    Assert.assertFalse(reQueueConfig.validate());
-  }
+    @Test
+    public void invalidWhenRoutingKeyIsNullTest() {
+        reQueueConfig.setRoutingKey(null);
+        assertFalse(reQueueConfig.validate());
+    }
 
-  @Test
-  public void invalidWhenAutoDeleteEnabledAndCronIsNullTest() {
-    reQueueConfig.setAutoRequeueEnabled(true);
-    reQueueConfig.setCron(null);
-    Assert.assertFalse(reQueueConfig.validate());
-  }
+    @Test
+    public void invalidWhenAutoDeleteEnabledAndCronIsNullTest() {
+        reQueueConfig.setAutoRequeueEnabled(true);
+        reQueueConfig.setCron(null);
+        assertFalse(reQueueConfig.validate());
+    }
 
-  @Test
-  public void validWhenAutoDeleteDisabledAndCronIsNullTest() {
-    reQueueConfig.setAutoRequeueEnabled(false);
-    reQueueConfig.setCron(null);
-    assertTrue(reQueueConfig.validate());
-  }
+    @Test
+    public void validWhenAutoDeleteDisabledAndCronIsNullTest() {
+        reQueueConfig.setAutoRequeueEnabled(false);
+        reQueueConfig.setCron(null);
+        assertTrue(reQueueConfig.validate());
+    }
 }
