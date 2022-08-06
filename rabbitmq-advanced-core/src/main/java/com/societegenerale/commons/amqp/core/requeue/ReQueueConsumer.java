@@ -24,6 +24,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,19 +48,28 @@ public class ReQueueConsumer {
 
   @RabbitListener(queues = "${rabbitmq.auto-config.re-queue-config.queue.name}")
   public void onMessage(ReQueueMessage reQueueMessage) {
+    log.info("Requeue processing started for DeadLetterQueue '{}' with MessageCount '{}'", reQueueMessage.getDeadLetterQueue(), reQueueMessage.getMessageCount());
     int count = 0;
+    List<Message> requeueFailureMessages = new ArrayList<>();
+
     do {
       Message message = rabbitTemplate.receive(reQueueMessage.getDeadLetterQueue(), timeout);
       if (message == null) {
         break;
       }
       Map<String, Object> headers = message.getMessageProperties().getHeaders();
-      if (reQueuePolicy.canReQueue(message)) {
+      if (reQueuePolicy!=null && reQueuePolicy.canReQueue(message)) {
         String queueName = (String) headers.get("x-original-queue");
         rabbitTemplate.send(queueName, message);
+      } else {
+        log.warn("Can not requeue the message with correlation-id '{}' as per the requeue policy", headers.get("correlation-id"));
+        requeueFailureMessages.add(message);
       }
       count++;
     } while (reQueueMessage.getMessageCount() < 0 || reQueueMessage.getMessageCount() > count);
+
+    requeueFailureMessages.forEach(message -> rabbitTemplate.send(reQueueMessage.getDeadLetterQueue(), message));
+    log.info("Requeue processing completed for DeadLetterQueue '{}'", reQueueMessage.getDeadLetterQueue());
   }
 
 }
