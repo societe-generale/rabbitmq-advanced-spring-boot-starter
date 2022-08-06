@@ -17,12 +17,11 @@
 package com.societegenerale.commons.amqp.core.requeue;
 
 import com.societegenerale.commons.amqp.core.requeue.policy.ReQueuePolicy;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,19 +31,14 @@ import java.util.Map;
  * Created by Anand Manissery on 7/13/2017.
  */
 @Slf4j
+@AllArgsConstructor
 public class ReQueueConsumer {
 
-  @Autowired
-  private RabbitTemplate rabbitTemplate;
+  private final RabbitTemplate rabbitTemplate;
 
-  @Autowired(required = false)
-  private ReQueuePolicy reQueuePolicy;
+  private final ReQueuePolicy reQueuePolicy;
 
-  @Value("${rabbitmq.auto-config.re-queue-config.timeout:3000}")
   private long timeout;
-
-  @Value("${rabbitmq.auto-config.re-queue-config.threshold:3}")
-  private int threshold;
 
   @RabbitListener(queues = "${rabbitmq.auto-config.re-queue-config.queue.name}")
   public void onMessage(ReQueueMessage reQueueMessage) {

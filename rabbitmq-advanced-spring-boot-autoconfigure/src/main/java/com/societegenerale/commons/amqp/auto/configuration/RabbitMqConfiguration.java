@@ -34,6 +34,7 @@ import org.springframework.amqp.rabbit.retry.MessageRecoverer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -88,8 +89,9 @@ public class RabbitMqConfiguration {
 
   @Bean
   @ConditionalOnProperty(prefix = "rabbitmq.auto-config", name = "re-queue-config.enabled", matchIfMissing = true)
-  public ReQueueConsumer reQueueConsumer() {
-    return new ReQueueConsumer();
+  public ReQueueConsumer reQueueConsumer(RabbitTemplate rabbitTemplate, ReQueuePolicy reQueuePolicy,
+                                         @Value("${rabbitmq.auto-config.re-queue-config.timeout:3000}") Long timeout) {
+    return new ReQueueConsumer(rabbitTemplate, reQueuePolicy, timeout);
   }
 
   @Bean

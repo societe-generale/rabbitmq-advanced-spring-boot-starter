@@ -22,6 +22,7 @@ import com.societegenerale.commons.amqp.core.recoverer.handler.MessageExceptionH
 import com.societegenerale.commons.amqp.core.recoverer.handler.impl.LogMessageExceptionHandler;
 import com.societegenerale.commons.amqp.core.requeue.AutoReQueueScheduler;
 import com.societegenerale.commons.amqp.core.requeue.ReQueueConsumer;
+import com.societegenerale.commons.amqp.core.requeue.policy.ReQueuePolicy;
 import com.societegenerale.commons.amqp.core.requeue.policy.impl.ThresholdReQueuePolicy;
 import org.mockito.Mockito;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -51,7 +52,7 @@ public class SpringBootAmqpTestApplication {
   }
 
   @Bean
-  public ThresholdReQueuePolicy thresholdReQueuePolicy() {
+  public ReQueuePolicy thresholdReQueuePolicy() {
     return new ThresholdReQueuePolicy();
   }
 
@@ -71,7 +72,7 @@ public class SpringBootAmqpTestApplication {
   }
 
   @Bean
-  public ReQueueConsumer reQueueConsumer() {
-    return new ReQueueConsumer();
+  public ReQueueConsumer reQueueConsumer(RabbitTemplate rabbitTemplate, ReQueuePolicy reQueuePolicy) {
+    return new ReQueueConsumer(rabbitTemplate, reQueuePolicy, 3000L);
   }
 }
