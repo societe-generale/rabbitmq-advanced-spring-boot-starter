@@ -34,6 +34,7 @@ import static org.mockito.Mockito.*;
 public class ReQueueConsumerTest {
 
   private static final long TIME_OUT = 3000L;
+
   private ReQueueConsumer reQueueConsumer;
 
   private RabbitTemplate rabbitTemplate;
