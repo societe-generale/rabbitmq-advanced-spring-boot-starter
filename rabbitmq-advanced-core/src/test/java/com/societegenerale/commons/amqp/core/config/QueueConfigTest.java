@@ -29,7 +29,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(OutputCaptureExtension.class)
@@ -105,7 +104,7 @@ public class QueueConfigTest {
     public void queueConfigWithNameAndValidationSuccessTest(CapturedOutput outputCapture) {
         queueConfig = QueueConfig.builder().name(queueName).build();
         assertTrue(queueConfig.validate());
-        assertEquals(outputCapture.getOut(), containsString(String.format("Queue configuration validated successfully for queue '%s'", queueName)));
+        assertTrue(outputCapture.getOut().contains(String.format("Queue configuration validated successfully for queue '%s'", queueName)));
     }
 
     @Test

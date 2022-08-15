@@ -35,13 +35,13 @@ public class RabbitConfigTest {
 
   private RabbitConfig expectedRabbitConfig;
 
-  private String exchange = "exchange";
+  private final String exchange = "exchange";
 
-  private String queue = "queue";
+  private final String queue = "queue";
 
-  private String binding = "binding";
+  private final String binding = "binding";
 
-  private String routingKey = "routingKey";
+  private final String routingKey = "routingKey";
 
   @Test
   public void rabbitConfigEqualsTest() {
@@ -112,7 +112,6 @@ public class RabbitConfigTest {
               .binding(binding, createBinding(exchange, queue, routingKey))
               .build();
       rabbitConfig.validate();
-      assertTrue(outputCapture.getOut().contains("RabbitConfig Validation done successfully"));
     });
   }
 
@@ -193,18 +192,16 @@ public class RabbitConfigTest {
 
   @Test
   public void rabbitConfigWithNoDeadLetterEnabledAndNullDeadLetterConfigTest(CapturedOutput outputCapture) {
-    assertThrows(RabbitmqConfigurationException.class, () -> {
-      rabbitConfig = RabbitConfig.builder()
-              .defaultExchange(createDefaultExchangeConfig())
-              .defaultQueue(QueueConfig.builder().autoDelete(true).durable(false).deadLetterEnabled(false).build())
-              .deadLetterConfig(null)
-              .exchange(exchange, createExchangeConfig(exchange))
-              .queue(queue, QueueConfig.builder().name(queue).deadLetterEnabled(false).build())
-              .binding(binding, createBinding(exchange, queue, routingKey))
-              .build();
-      rabbitConfig.validate();
-      assertTrue(outputCapture.getOut().contains("RabbitConfig Validation done successfully"));
-    });
+    rabbitConfig = RabbitConfig.builder()
+            .defaultExchange(createDefaultExchangeConfig())
+            .defaultQueue(QueueConfig.builder().autoDelete(true).durable(false).deadLetterEnabled(false).build())
+            .deadLetterConfig(null)
+            .exchange(exchange, createExchangeConfig(exchange))
+            .queue(queue, QueueConfig.builder().name(queue).deadLetterEnabled(false).build())
+            .binding(binding, createBinding(exchange, queue, routingKey))
+            .build();
+    rabbitConfig.validate();
+    assertTrue(outputCapture.getOut().contains("RabbitConfig Validation done successfully"));
   }
 
   @Test
@@ -339,6 +336,5 @@ public class RabbitConfigTest {
   private ReQueueConfig createReQueueConfig(String exchange, String queue) {
     return ReQueueConfig.builder().exchange(createExchangeConfig(exchange)).queue(createQueueConfig(queue)).routingKey("requeue.key").build();
   }
-
 
 }

@@ -16,6 +16,7 @@
 
 package com.societegenerale.commons.amqp.core.requeue;
 
+import com.societegenerale.commons.amqp.core.requeue.policy.ReQueuePolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Message;
@@ -23,8 +24,6 @@ import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.core.MessagePropertiesBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.mockito.Mockito.*;
 
@@ -32,14 +31,15 @@ import static org.mockito.Mockito.*;
  * Created by Anand Manissery on 7/13/2017.
  */
 
-@SpringBootTest
 public class ReQueueConsumerTest {
 
-  @Autowired
+  private static final long TIME_OUT = 3000L;
+
   private ReQueueConsumer reQueueConsumer;
 
-  @Autowired
   private RabbitTemplate rabbitTemplate;
+
+  private ReQueuePolicy reQueuePolicy;
 
   private Message message;
 
@@ -47,25 +47,51 @@ public class ReQueueConsumerTest {
 
   @BeforeEach
   public void setUp() {
-    MessageProperties messageProperties = MessagePropertiesBuilder.newInstance().setHeader("x-original-queue", "original-queue").build();
+    rabbitTemplate = mock(RabbitTemplate.class);
+    reQueuePolicy = mock(ReQueuePolicy.class);
+    reQueueConsumer = new ReQueueConsumer(rabbitTemplate, reQueuePolicy, TIME_OUT);
+
+    MessageProperties messageProperties = MessagePropertiesBuilder.newInstance().setHeader("x-original-queue", "dummy-queue").build();
     message = MessageBuilder.withBody("DummyMessage".getBytes()).andProperties(messageProperties).build();
+
     reQueueMessage = ReQueueMessage.builder()
-        .deadLetterQueue("dlq-name")
+        .deadLetterQueue("dummy-queue.dlq")
         .messageCount(2)
         .build();
   }
 
   @Test
-  public void reQueueMessageUntilTheMessageCount() {
-    when(rabbitTemplate.receive(anyString(), anyLong())).thenReturn(message);
+  public void reQueueMessageUntilTheMessageCountWhenAllMessageCanRequeue() {
+    when(rabbitTemplate.receive("dummy-queue.dlq", TIME_OUT)).thenReturn(message);
+    when(reQueuePolicy.canReQueue(message)).thenReturn(true);
     reQueueConsumer.onMessage(reQueueMessage);
-    verify(rabbitTemplate, times(2)).send(anyString(), any(Message.class));
+    verify(rabbitTemplate, times(2)).send("dummy-queue", message);
+  }
+
+  @Test
+  public void shouldNotReQueueMessageFromDealLetterQueueWhenMessageCanNotRequeue() {
+    when(rabbitTemplate.receive("dummy-queue.dlq", TIME_OUT)).thenReturn(message);
+    when(reQueuePolicy.canReQueue(message)).thenReturn(false);
+    reQueueConsumer.onMessage(reQueueMessage);
+    verify(rabbitTemplate, times(2)).send("dummy-queue.dlq", message);
   }
 
   @Test
   public void shouldNotReQueueIfTheMessageIsNull() {
     when(rabbitTemplate.receive(anyString(), anyLong())).thenReturn(null);
     reQueueConsumer.onMessage(reQueueMessage);
-    verify(rabbitTemplate, times(0)).send(anyString(), any(Message.class));
+    verify(rabbitTemplate, never()).send(anyString(), any(Message.class));
+  }
+
+  @Test
+  public void shouldNotReQueueWhenRequeuePolicyIsNull() {
+    //Given
+    reQueueConsumer = new ReQueueConsumer(rabbitTemplate, null, TIME_OUT);
+    //And
+    when(rabbitTemplate.receive("dummy-queue.dlq", 3000L)).thenReturn(message);
+    //When
+    reQueueConsumer.onMessage(reQueueMessage);
+    //Then
+    verify(rabbitTemplate, times(2)).send("dummy-queue.dlq", message);
   }
 }
