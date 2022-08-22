@@ -14,10 +14,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <commons.lang.version>2.6</commons.lang.version>
-        <lombok.version>1.16.16</lombok.version>
-        <jacoco.version>0.8.0</jacoco.version>
+        <jacoco.version>0.8.8</jacoco.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <version.maven.plugin.license>1.8</version.maven.plugin.license>
         <license.licenseName>apache_v2</license.licenseName>
@@ -76,13 +75,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
+
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
