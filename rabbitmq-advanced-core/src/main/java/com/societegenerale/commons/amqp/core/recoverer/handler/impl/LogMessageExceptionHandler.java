@@ -31,17 +31,15 @@ import java.util.Map;
 @Slf4j
 public class LogMessageExceptionHandler implements MessageExceptionHandler {
 
-  private static List directlyReadableContentTypes;
+  private static final List<String> directlyReadableContentTypes;
 
   static{
 
-    List tmpDirectlyReadableContentTypes = Arrays.asList("text/plain",
-                                                         "application/json",
-                                                         "text/x-json",
-                                                         "application/xml");
-
-    directlyReadableContentTypes=Collections.unmodifiableList(tmpDirectlyReadableContentTypes);
-
+    directlyReadableContentTypes=Collections.unmodifiableList(Arrays.asList("text/plain",
+                                                                            "application/json",
+                                                                            "text/x-json",
+                                                                            "application/xml"));
+    
   }
 
   @Override
