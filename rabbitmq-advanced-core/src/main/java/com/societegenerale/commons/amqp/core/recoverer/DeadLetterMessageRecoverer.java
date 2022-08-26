@@ -81,9 +81,6 @@ public class DeadLetterMessageRecoverer implements MessageRecoverer {
 
   /**
    * This is a dummy implementation that doesn't do anything.. If you extend this class, you can simply override this method to provide your own additional headers
-   * @param message
-   * @param cause
-   * @return
    */
   protected Map<String, Object> loadAdditionalHeaders(Message message, Throwable cause) {
     log.info("No additional headers added for message {}, cause {}", message, cause == null ? null : cause.getMessage());
