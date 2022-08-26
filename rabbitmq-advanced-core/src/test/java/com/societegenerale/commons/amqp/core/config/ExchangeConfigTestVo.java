@@ -16,12 +16,11 @@
 
 package com.societegenerale.commons.amqp.core.config;
 
-import com.societegenerale.commons.amqp.core.config.ExchangeConfig;
-import com.societegenerale.commons.amqp.core.config.ExchangeTypes;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.util.StringUtils;
+
 
 
 @Setter
